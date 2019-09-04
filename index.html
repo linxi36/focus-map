@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>自动切换焦点图</title>
+    <style>
+        .box {
+            position: relative;
+        }
+
+        .clearfix::after {
+            content: "";
+            display: table;
+            clear: both;
+        }
+
+        #left {
+            float: left;
+            width: 140px;
+            border: 2px solid black;
+        }
+
+        #left img {
+            width: 140px;
+        }
+
+        #right {
+            margin-left: 10px;
+            float: left;
+            width: 440px;
+        }
+
+        #right img {
+            display: none;
+            width: 440px;
+        }
+
+        #right .show {
+            display: inline-block;
+        }
+
+        #pointer {
+            position: absolute;
+            margin-top: 4px;
+            top: 0;
+            left: 0;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="box clearfix">
+        <div id="left">
+            <img src="./img/1.jpg" alt="">
+            <img src="./img/2.jpg" alt="">
+            <img src="./img/3.jpg" alt="">
+        </div>
+        <img src="./img/pointer.png" alt="" id="pointer">
+        <div id="right">
+            <img src="./img/1.jpg" alt="" class="show">
+            <img src="./img/2.jpg" alt="">
+            <img src="./img/3.jpg" alt="">
+        </div>
+    </div>
+    <script>
+        var left = document.getElementById("left");
+        var leftAry = left.getElementsByTagName("img");
+        var pointer = document.getElementById("pointer");
+        var rightAry = document.getElementById("right").getElementsByTagName("img");
+        var moveTop = 84;  //每次移动的距离
+        var imgID = 0;
+        var time;
+        for (var i = 0; i < leftAry.length; i++) {
+            leftAry[i].onmouseover = mouseOver;
+            leftAry[i].onmouseout = mouseOut;
+            leftAry[i].index =i;
+        }
+        function mouseOver (){
+            clearInterval(time);
+            for(var i =0;i<leftAry.length;i++){
+                  if(this.index ===i){
+                      rightAry[i].className = "show";
+                      pointer.style.top = this.index * 84 +"px";
+                  }else{
+                      rightAry[i].className = " ";
+                  }
+            }
+        }
+        //自动轮播
+        time = setInterval(move, 1000);
+        function move() {
+            rightAry[imgID].className = " ";
+            imgID += 1;
+            if (imgID + 1 > leftAry.length) {
+                imgID = 0;
+            }
+            pointer.style.top = imgID * 84 + "px";
+            rightAry[imgID].className = "show";
+        }
+        function mouseOut(){
+            clearInterval(time);
+            time = setInterval(move,1000);
+        }
+    </script>
+</body>
+
+</html>
